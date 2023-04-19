@@ -21,7 +21,7 @@ function Check-Module {
     }
   } else {
         # Register the WindowsPowerShell Gallery as a trusted repository
-    Set-PSRepository -Name WindowsPowerShell -InstallationPolicy Trusted
+    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
     
     # The module is not installed, so install it
     Install-Module -Name $Name
@@ -31,8 +31,23 @@ function Check-Module {
 # Increase the function capacity
 $MaximumFunctionCount = 32768
 
+# Import the required modules
+Check-Module -Name PowerShellGet
+
 # Import the Microsoft.Graph module
-Check-Module -Name Microsoft.Graph -Import:$true
+Check-Module -Name Microsoft.Graph
+
+#Verify most recent version being used
+$curver = $ver
+$data = Invoke-RestMethod -Method Get -Uri https://raw.githubusercontent.com/BellTechlogix/Create-AzureAppRegistration/main/Create-AzureAppRegistration.ps1
+Invoke-Expression ($data.substring(0,13))
+if($curver -ge $ver){powershell -Command "& {[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); [System.Windows.Forms.MessageBox]::Show('You are running the most current script version $ver')}"}
+ELSEIF($curver -lt $ver){powershell -Command "& {[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms'); [System.Windows.Forms.MessageBox]::Show('You are running $curver the most current script version is $ver. Ending')}" 
+start-sleep -seconds 10
+EXIT}
+
+# Import the Microsoft.Graph module
+Check-Module -Name Microsoft.Graph
 
 # Force authentication
 Connect-MgGraph
