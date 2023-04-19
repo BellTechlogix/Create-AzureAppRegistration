@@ -1,3 +1,11 @@
+$ver = '1.00'
+<#
+Created By: Kristopher Roy
+Last Updated By: BTL
+Created On: 19APR2023
+Last Updated On: 19APR2023
+#>
+
 # Function to check if a module is installed
 function Check-Module {
   param (
